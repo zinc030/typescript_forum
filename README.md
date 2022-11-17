@@ -14,3 +14,5 @@ npm i ejs <br>
 4. if 'tsc --init' doesn't work, try 'npx tsc --init' 
 5. Enter the following lines on powershell: <br>
 nodemon --watch '*.ts' --exec 'ts-node' index.ts
+
+localhost:8080
