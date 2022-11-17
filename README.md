@@ -1,4 +1,5 @@
 # typescript_forum
+Please make sure to install npm beforehand. 'npm install -g npm'
 1. Download the files 
 2. Open powershell and use 'cd' to go to the directory where the files are 
 3. Enter the following lines: <br>
