@@ -31,13 +31,13 @@ function listBbs(req: Request, res: Response, next: NextFunction): void{
     }
 };
 
-function writeBbs(req: Request, res: Response, next: NextFunction){
-    try{
+function writeBbs(req: Request, res: Response, next: NextFunction) {
+    try {
         if (!req.session.user){
-            res.redirect("login");
+            res.redirect("login"); //여기는 왜 세미콜론이 있고
         } else {
-            bbs.push({name: req.session.user.name, title: req.body.title, contents: req.body.contents})
-            res.redirect("/bbs")
+            bbs.push({name: req.session.user.name, title: req.body.title, contents: req.body.contents});
+            res.redirect("/bbs");  //여기는 왜 세미콜론이 없어요? 혹시 몰라서 세미콜론 추가 
         }
     }
     catch (error){
@@ -93,7 +93,28 @@ function index(req: Request, res: Response, next: NextFunction): void {
     }
 };
 
-function signUp(req: Request, res: Response, next: NextFunction): void {
+function register(req: Request, res: Response, next: NextFunction): void { //get request을 통해서 회원가입 페이지 불러오기?
+    try {
+        res.render('register'); //register.ejs로 이동?
+    } catch (error) {
+        next(error);
+    }
+};
+
+function registerUser(req: Request, res: Response, next: NextFunction) { //this is for making a new account where new username and password are pushed into the users array
+    try {
+        if (!req.session.user){ //로그인이 안되어있으면 
+            users.push({name: req.body.nname, password: req.body.npassword}); //users array에 새 아이디/비번 추가!
+            res.redirect('/login');
+        } else { //로그인이 되어있으면 ..왜 회원가입을?
+            res.redirect('/login');
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+function signUp(req: Request, res: Response, next: NextFunction): void { 
     try {
         res.render('login', { loggedin: req.session.user });
     } catch (error) {
@@ -145,16 +166,6 @@ function restricted(req: Request, res: Response, next: NextFunction): void {
     }
 };
 
-function register(req: Request, res: Response, next: NextFunction): void{
-    try{
-        if (req.session.user) {
-            res.render("restricted");
-        }
-    } catch(error){
-        next(error);
-    }
-};
-
 class App {
     public app: express.Application;
     constructor() {
@@ -195,8 +206,9 @@ class App {
         this.app.get('/restricted', restricted);
         this.app.get('/logout', logOut);
         this.app.get('/bbs', listBbs);
-        this.app.get('/write', writeBbs);
+        this.app.post('/write', writeBbs); //이 줄에서 'post'를 'get'으로 잘못 씀.. 이 오류 원인 찾는데 3시간 걸림 :(
         this.app.get('/register', register);
+        this.app.post('/register', registerUser);
     }
 }
 
