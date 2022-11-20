@@ -104,7 +104,7 @@ function register(req: Request, res: Response, next: NextFunction): void { //get
 function registerUser(req: Request, res: Response, next: NextFunction) { //this is for making a new account where new username and password are pushed into the users array
     try {
         if (!req.session.user){ //로그인이 안되어있으면 
-            users.push({name: req.body.nname, password: req.body.npassword}); //users array에 새 아이디/비번 추가!
+            users.push({name: req.body.nusername, password: req.body.npassword}); //users array에 새 아이디/비번 추가!
             res.redirect('/login');
         } else { //로그인이 되어있으면 ..왜 회원가입을?
             res.redirect('/login');
