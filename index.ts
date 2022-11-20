@@ -109,7 +109,7 @@ function registerUser(req: Request, res: Response, next: NextFunction) { //this 
         } else { //로그인이 되어있으면 ..왜 회원가입을?
             res.redirect('/login');
         }
-    } catch (error) {
+    } catch (error) 
         next(error);
     }
 }
@@ -148,6 +148,14 @@ function logOut(req: Request, res: Response, next: NextFunction): void {
             res.redirect('/');
         });
     } catch (error) {
+        next(error);
+    }
+};
+
+function filter(req: Request, res: Response, next: NextFunction) {
+    try {
+       
+    } catch (error){
         next(error);
     }
 };
@@ -209,6 +217,7 @@ class App {
         this.app.post('/write', writeBbs); //이 줄에서 'post'를 'get'으로 잘못 씀.. 이 오류 원인 찾는데 3시간 걸림 :(
         this.app.get('/register', register);
         this.app.post('/register', registerUser);
+        this.app.post('/filter,' filter);
     }
 }
 
