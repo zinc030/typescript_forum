@@ -34,10 +34,10 @@ function listBbs(req: Request, res: Response, next: NextFunction): void{
 function writeBbs(req: Request, res: Response, next: NextFunction) {
     try {
         if (!req.session.user){
-            res.redirect("login"); //여기는 왜 세미콜론이 있고
+            res.redirect("login"); 
         } else {
             bbs.push({name: req.session.user.name, title: req.body.title, contents: req.body.contents});
-            res.redirect("/bbs");  //여기는 왜 세미콜론이 없어요? 혹시 몰라서 세미콜론 추가 
+            res.redirect("/bbs");  
         }
     }
     catch (error){
@@ -109,7 +109,7 @@ function registerUser(req: Request, res: Response, next: NextFunction) { //this 
         } else { //로그인이 되어있으면 ..왜 회원가입을?
             res.redirect('/login');
         }
-    } catch (error) 
+    } catch (error) {
         next(error);
     }
 }
@@ -152,10 +152,22 @@ function logOut(req: Request, res: Response, next: NextFunction): void {
     }
 };
 
-function filter(req: Request, res: Response, next: NextFunction) {
+//following is a function for the user's webpage which only shows the posts that are written by the current session user
+function myPosts(req: Request, res: Response, next: NextFunction): void {
     try {
-       
-    } catch (error){
+        if (!req.session.user){
+            res.redirect("login");
+        } else {
+            var myPosts = bbs.filter(function (post) {
+                //request current session's user name in a different method
+                return post.name === req.session.user?.name;
+            });
+            res.render('myposts', {
+                list: myPosts,
+                loggedin: req.session.user
+            }); 
+        }
+    } catch (error) {
         next(error);
     }
 };
@@ -217,7 +229,7 @@ class App {
         this.app.post('/write', writeBbs); //이 줄에서 'post'를 'get'으로 잘못 씀.. 이 오류 원인 찾는데 3시간 걸림 :(
         this.app.get('/register', register);
         this.app.post('/register', registerUser);
-        this.app.post('/filter,' filter);
+        this.app.get('/myPosts', myPosts);
     }
 }
 
